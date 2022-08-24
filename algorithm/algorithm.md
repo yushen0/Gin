@@ -255,7 +255,7 @@ public static String test(String str) {
 给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 。
 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
 返回容器可以储存的最大水量。
-
+![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/Container_with_the_most_water.jpg)
 双指针：
     理解涉及两边边界的问题，双指针解决
     需要计算体积，指针移动时，移动比较小的指针
@@ -339,7 +339,7 @@ class Solution {
 ```
 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
-
+![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/phoneNumber.jpg)
 
 解题思路：回溯
     回溯算法用于寻找所有的可行解，如果发现一个解不可行，则会舍弃不可行的解。在这道题中，由于每个数字对应的每个字母都可能进入字母组合，因此不存在不可行的解，直接穷举所有的解即可。
@@ -398,7 +398,7 @@ class Solution {
 
 ```
 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
-
+![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/delete_N_ListNode.jpg)
 解题思路：
         1.一次遍历，找到链表的长度，我们首先从头节点开始对链表进行一次遍历，得到链表的长度 LL。随后我们再从头节点开始对链表进行一次遍历，当遍历到第 L-n+1L−n+1 个节点时，它就是我们需要删除的节点
         2.栈：我们也可以在遍历链表的同时将所有节点依次入栈。根据栈「先进后出」的原则，我们弹出栈的第 nn 个节点就是需要删除的节点，并且目前栈顶的节点就是待删除节点的前驱节点。

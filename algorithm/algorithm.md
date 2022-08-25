@@ -9,6 +9,12 @@
 - [8.电话号码的字母组合](#8电话号码的字母组合)
 - [9.删除链表的倒数第 N 个结点](#9删除链表的倒数第-n-个结点)
 - [10.有效的括号](#10有效的括号)
+- [11.合并两个有序链表](#11合并两个有序链表)
+- [12.括号生成](#12括号生成)
+- [13.合并K个升序链表](#13合并k个升序链表)
+- [14.括号生成](#14括号生成)
+- [15.括号生成](#15括号生成)
+
 
 ##### 1.两数之和
 
@@ -250,12 +256,12 @@ public static String test(String str) {
     }
 ```
 
-#### 6.盛水最多的容器
+##### 6.盛水最多的容器
 ```
 给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 。
 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
 返回容器可以储存的最大水量。
-![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/Container_with_the_most_water.jpg)
+
 双指针：
     理解涉及两边边界的问题，双指针解决
     需要计算体积，指针移动时，移动比较小的指针
@@ -281,7 +287,7 @@ class Solution {
 }
 ```
 
-#### 7.三数之和
+##### 7.三数之和
 
 ```
 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且不重复的三元组。
@@ -334,12 +340,12 @@ class Solution {
 }
 ```
 
-#### 8.电话号码的字母组合
+##### 8.电话号码的字母组合
 
 ```
 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
-![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/phoneNumber.jpg)
+
 
 解题思路：回溯
     回溯算法用于寻找所有的可行解，如果发现一个解不可行，则会舍弃不可行的解。在这道题中，由于每个数字对应的每个字母都可能进入字母组合，因此不存在不可行的解，直接穷举所有的解即可。
@@ -394,11 +400,11 @@ class Solution {
 ```
 
 
-#### 9.删除链表的倒数第 N 个结点
+##### 9.删除链表的倒数第 N 个结点
 
 ```
 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
-![Image](https://github.com/yushen0/Gin/blob/main/algorithm/images/delete_N_ListNode.jpg)
+
 解题思路：
         1.一次遍历，找到链表的长度，我们首先从头节点开始对链表进行一次遍历，得到链表的长度 LL。随后我们再从头节点开始对链表进行一次遍历，当遍历到第 L-n+1L−n+1 个节点时，它就是我们需要删除的节点
         2.栈：我们也可以在遍历链表的同时将所有节点依次入栈。根据栈「先进后出」的原则，我们弹出栈的第 nn 个节点就是需要删除的节点，并且目前栈顶的节点就是待删除节点的前驱节点。
@@ -443,7 +449,7 @@ class Solution {
 ```
 
 
-#### 10.有效的括号
+##### 10.有效的括号
 
 ```
 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
@@ -491,4 +497,357 @@ class Solution {
         return stack.isEmpty();
     }
 }
+```
+
+##### 11.合并两个有序链表
+
+```
+将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+
+解题思路：
+        1.循环迭代，比较两个链表节点的大小
+        2.递归，代码简洁，思路就是以其中一个节点为头节点，用其next节点与另一个链表进行合并，边界条件就是链表到尾部，listNode == null(递归的要点就是一定要找到边界条件，否则会栈溢出)
+        时间复杂度O(m+n)，m、n代表两个链表的长度
+```
+
+```
+迭代循环
+```
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+        // 确定头节点指定一个哑节点
+        ListNode head = new ListNode();
+        ListNode current = head;
+        while (list1 != null && list2 != null){
+            if (list1.val <= list2.val) {
+                current.next = list1; 
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
+            }
+            current = current.next;
+        }
+
+        // 合并完成后，把剩下的节点接上
+        current.next = list1 == null ? list2 : list1;
+        return head.next;
+    }
+}
+```
+
+```
+递归
+```
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+       if (list1 == null) {
+           return list2;
+       } 
+       if (list2 == null) {
+           return list1;
+       }
+
+       if (list1.val <= list2.val) {
+           list1.next = mergeTwoLists(list1.next, list2);
+           return list1;
+       } else {
+           list2.next = mergeTwoLists(list1, list2.next);
+           return list2;
+       }
+    }
+}
+```
+
+##### 12.括号生成
+
+```
+数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
+提示：1 <= n <= 8
+
+解题思路：回溯&&递归
+        主要思想，边界终止条件就是左右括号可以放置的个数都等于0
+        否则就判断左右括号可以放置的数量大小
+        回溯算法要注意一个细节，当左括号可以使用的个数严格大于右括号可以使用的个数时，不可以往下进行了，这种情况一定不会有有效的括号对生成了
+        就是说无论怎么放置，剩下的可以使用的左边括号一定要小于等于可以使用的右边括号
+```
+
+```
+递归
+```
+```java
+class Solution {
+
+    List<String> result = new ArrayList<>();
+    public List<String> generateParenthesis(int n) {
+
+        if (n == 0) {
+            return result;
+        }
+
+        generateParenthesis("", n, n);
+        return result;
+    }
+
+    public void generateParenthesis(String str, int left, int right) {
+        if (left == 0 && right == 0) {
+            result.add(str);
+            return;
+        }
+      
+        if (left == right) {
+            // 代表左右括号目前放置的一样，现在就是有效的括号了，所以接下来只能放左括号
+            generateParenthesis(str + "(", left-1, right);
+        } else {
+            // 代表目前既可以放左括号，又可以放右括号
+            if (left > 0) {
+                // 左括号还可以继续放
+                generateParenthesis(str + "(", left-1, right);
+            }
+            // 只能放右括号
+            generateParenthesis(str + ")", left, right-1);
+        }
+    }
+}
+```
+
+```
+回溯
+```
+```java
+class Solution {
+
+    List<String> result = new ArrayList<>();
+    public List<String> generateParenthesis(int n) {
+
+        if (n == 0) {
+            return result;
+        }
+
+        generateParenthesis(new StringBuilder(), n, n);
+        return result;
+    }
+
+    public void generateParenthesis(StringBuilder str, int left, int right) {
+        if (left == 0 && right == 0) {
+            result.add(str.toString());
+            return;
+        }
+
+        // 左括号可以使用的个数严格大于右括号可以使用的个数
+        if (left > right) {
+            return;
+        }
+
+        if (left > 0) {
+            generateParenthesis(str.append("("), left-1, right);
+            str.deleteCharAt(str.length()-1);
+        }
+
+        if (right > 0) {
+            generateParenthesis(str.append(")"), left, right-1);
+            str.deleteCharAt(str.length()-1);
+        }
+    }
+}
+
+```
+
+##### 13.合并K个升序链表
+
+```
+给你一个链表数组，每个链表都已经按升序排列。
+请你将所有链表合并到一个升序链表中，返回合并后的链表。
+
+解题思路：
+        1.两两合并，将多个链表合并修改为两个链表的合并，时间复杂度较高
+        2.两两合并，分治合并，可以使用二分法解决，时间复杂度：O(n * logk)
+        2.优先级队列：PriorityQueue，即优先级队列。优先级队列可以保证每次取出来的元素都是队列中的最小或     最大的元素（Java优先级队列默认每次取出来的为最小元素）。
+
+        底层原理：实际上优先级队列采用的是堆的形式来进行存储的，通过调整小根堆或大根堆来保证每次取出的元素为队列中最小或最大。
+        小根堆（任意一个非叶子节点的权值，都不大于其左右子节点的权值）
+        大根堆（任意一个非叶子节点的权值，都大于其左右子节点的权值）
+
+        这样借助优先级队列，只需要将每个链表入队就可以，底层排好序后，再取出来，时间复杂度：O(n * logk)
+
+```
+```
+两两合并
+```
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        // 将题目改成两两合并
+        ListNode listNode = null;
+        for (int i = 0; i < lists.length; i++) {
+            listNode = mergeTwoLists(listNode, lists[i]);
+        }
+        return listNode;
+    }
+
+    public ListNode mergeTwoLists(ListNode listNode1, ListNode listNode2) {
+        // 定义一个哑节点
+        ListNode head = new ListNode();
+        ListNode current = head;
+
+        while (listNode1 != null && listNode2 != null) {
+            if (listNode1.val <= listNode2.val) {
+                current.next = listNode1;
+                listNode1 = listNode1.next;
+            } else {
+                current.next = listNode2;
+                listNode2 = listNode2.next;
+            }
+
+            current = current.next;
+        }
+
+        current.next = listNode1 == null ? listNode2 : listNode1;
+        return head.next;
+    } 
+}
+```
+
+```
+分治合并
+```
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        // 将题目改成两两合并
+        if (lists == null || lists.length == 0){
+            return null;
+        }
+        return merge(lists, 0, lists.length-1);
+    }
+
+    public ListNode merge(ListNode[] lists, int left, int right){
+        // 递归终止条件，当左右坐标重合时，直接返回
+        if (left == right) {
+            return lists[left];
+        }
+        // 中间索引
+        int mid = (right + left)/2;
+        // 左边合并
+        ListNode listNode1 = merge(lists, left, mid);
+        // 右边合并
+        ListNode listNode2 = merge(lists, mid+1, right);
+        return mergeTwoLists(listNode1, listNode2);
+    }
+
+    public ListNode mergeTwoLists(ListNode listNode1, ListNode listNode2) {
+        // 定义一个哑节点
+        ListNode head = new ListNode();
+        ListNode current = head;
+
+        while (listNode1 != null && listNode2 != null) {
+            if (listNode1.val <= listNode2.val) {
+                current.next = listNode1;
+                listNode1 = listNode1.next;
+            } else {
+                current.next = listNode2;
+                listNode2 = listNode2.next;
+            }
+
+            current = current.next;
+        }
+
+        current.next = listNode1 == null ? listNode2 : listNode1;
+        return head.next;
+    } 
+}
+
+```
+```
+优先级队列
+```
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+     PriorityQueue<ListNode> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
+        for(int i = 0; i < lists.length; i++){
+            if (lists[i] != null){
+                priorityQueue.offer(lists[i]);
+            }
+        }
+        ListNode head = new ListNode();
+        ListNode tail = head;
+
+        while(!priorityQueue.isEmpty()){
+            ListNode current = priorityQueue.poll();
+            tail.next = current;
+            tail = tail.next;
+            if (current.next != null) {
+                priorityQueue.offer(current.next);
+            }
+        }
+        return head.next;
+    }
+}
+
+```
+
+##### 14.下一个排列
+
+```
+整数数组的一个 排列  就是将其所有成员以序列或线性顺序排列。
+
+例如，arr = [1,2,3] ，以下这些都可以视作 arr 的排列：[1,2,3]、[1,3,2]、[3,1,2]、[2,3,1] 。
+整数数组的 下一个排列 是指其整数的下一个字典序更大的排列。更正式地，如果数组的所有排列根据其字典顺序从小到大排列在一个容器中，那么数组的 下一个排列 就是在这个有序容器中排在它后面的那个排列。如果不存在下一个更大的排列，那么这个数组必须重排为字典序最小的排列（即，其元素按升序排列）。
+
+例如，arr = [1,2,3] 的下一个排列是 [1,3,2] 。
+类似地，arr = [2,3,1] 的下一个排列是 [3,1,2] 。
+而 arr = [3,2,1] 的下一个排列是 [1,2,3] ，因为 [3,2,1] 不存在一个字典序更大的排列。
+给你一个整数数组 nums ，找出 nums 的下一个排列。
+
+必须 原地 修改，只允许使用额外常数空间。
+
+
+题目没看懂。。。
+```
+
+```java
+```
+
+##### 15.最长有效括号
+
+```
+给你一个只包含 '(' 和 ')' 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
+```
+
+```java
 ```

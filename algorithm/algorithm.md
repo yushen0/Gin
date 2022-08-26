@@ -14,6 +14,7 @@
 - [13.合并K个升序链表](#13合并k个升序链表)
 - [14.下一个排列](#14下一个排列)
 - [15.最长有效括号](#15最长有效括号)
+- [16.搜索旋转排序数组](#16搜索旋转排序数组)
 
 
 ##### 1.两数之和
@@ -975,4 +976,66 @@ class Solution {
 ```
 
 ```java
+```
+
+##### 16.搜索旋转排序数组
+
+```
+整数数组 nums 按升序排列，数组中的值 互不相同 。
+在传递给函数之前，nums 在预先未知的某个下标 k（0 <= k < nums.length）上进行了 旋转，
+使数组变为 [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 在下标 3 处经旋转后可能变为 [4,5,6,7,0,1,2] 。
+给你 旋转后 的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。
+你必须设计一个时间复杂度为 O(log n) 的算法解决此问题。
+
+解题思路：
+    时间复杂度为 O(log n) ，第一反应是二分法
+    主要点在于需要找到那个旋转的地方，所以比简单二分多加一个条件，找一下哪边是严格升序的部分
+    需要注意的是，边界值的判断~
+
+```
+
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums.length == 0) {
+            return -1;
+        }
+        if(nums.length == 1) {
+            return nums[0] == target? 0 : -1;
+        }
+        return search(nums, 0, nums.length-1, target);
+    }
+
+    public int search(int[] nums, int start, int end, int target) {
+
+        if (start > end) {
+            return -1;
+        }
+        // 找到中间的索引
+        int mid = (start + end) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+
+        if (nums[start] <= nums[mid]) {
+            // 说明左边的是严格升序的 
+            if (nums[start] <= target && target < nums[mid]) {
+                // 说明目标值在左边，左边严格升序
+                return search(nums, start, mid-1, target);
+            } else {
+                return search(nums, mid+1, end, target);
+            }
+        } else {
+            // 说明右边是严格升序的
+            if (nums[mid] < target && target <= nums[end]) {
+                // 说明目标值在右边
+                return search(nums, mid+1, end, target);
+            } else {
+                // 说明目标值在左边
+                return search(nums, start, mid-1, target);
+            }
+        }        
+    }
+
+}
 ```

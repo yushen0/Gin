@@ -121,7 +121,67 @@ public static Integer test(String str) {
 如果时间复杂度要求到log级别，通常是需要二分查找法
 
 ```
+```java
+/**
+归并排序求解
+**/
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // 归并排序
+        // 两个数组的起点
+        int i = 0, j = 0;
+        // 两个数组的终点
+        int length1 = nums1.length, length2 = nums2.length;
 
+        if(length1 == 0) {
+            if (length2 % 2 == 1) {
+                return nums2[length2 / 2];
+            } else {
+                return (nums2[(length2 /2) -1] + nums2[length2 /2]) / 2.0;
+            }
+        }
+
+        if(length2 == 0) {
+            if (length1 % 2 == 1) {
+                return nums1[length1 / 2];
+            } else {
+                return (nums1[(length1 /2) -1] + nums1[length1 /2]) / 2.0;
+            }
+        }
+        // 临时数组
+        int[] tempArr = new int[length1+length2];
+        // 临时数组索引
+        int index = 0;
+        while(i < length1 && j < length2){
+            if (nums1[i] <= nums2[j]) {
+                tempArr[index++] = nums1[i++];
+            } else {
+                tempArr[index++] = nums2[j++];
+            }
+        }
+
+        if(i < length1){
+            for (; i < length1; i++){
+                tempArr[index++] = nums1[i];
+            }
+        }
+
+        if(j < length2){
+            for (; j < length2; j++){
+                tempArr[index++] = nums2[j];
+            }
+        }
+
+        
+        int mid = (length1 + length2) / 2;
+        if ((length1 + length2) % 2 == 1) {
+            return tempArr[mid];
+        } else {
+            return (tempArr[mid-1] + tempArr[mid]) / 2.0;
+        }
+    }
+}
+```
 ```java
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {

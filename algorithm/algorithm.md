@@ -897,10 +897,75 @@ class Solution {
 必须 原地 修改，只允许使用额外常数空间。
 
 
-题目没看懂。。。
+题目解析：
+    一个整数数组可以拼成一个数，例如[1,2,3]数组，可以拼成一个三位数 123
+    举例 123 寻找下一个由这个整数数组拼成的，只比 123 大一点的数
+    比如 123 的下一个 是 132，不是213
+解题思路：
+    先找出最大的索引 k 满足 nums[k] < nums[k+1]，如果不存在，就翻转整个数组；
+    再找出另一个最大索引 l 满足 nums[l] > nums[k]；
+    交换 nums[l] 和 nums[k]；
+    最后翻转 nums[k+1:]。
+    先找到满足nums[left] < nums[right]的索引 left，如果不存在就直接翻转数组，因为 321 的下一个题目要求是123
+    再从右边【right,end】找到满足nums[left] < nums[index]的索引 index
+    交换nums[left] 和 nums[index]
+    交换完成后，[index+1, end] 范围内的数改为升序，就是直接反转过来就可以
+    
 ```
 
 ```java
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int length = nums.length;
+        //从后向前找第一次出现邻近升序的对儿，nums[leftIndex] < nums[rightIndex]
+        int leftIndex = length - 2, rightIndex = length - 1;
+        while(leftIndex >= 0) {
+            if(nums[leftIndex] < nums[rightIndex]){
+               break;
+            }
+            leftIndex--; 
+            rightIndex--;
+        }
+       
+        //没有下一个大的数，就返回最小的那个(升序的)，例如321的下一个就是最小的123,直接反转数组
+        if(leftIndex < 0) {
+            reverse(nums, 0, length-1);
+            return;
+        }
+       
+        //从[rightIndex, end]从后向前找第一个令nums[leftIndex] < nums[index]的 index索引对应的值
+        int index;
+        for(index = length-1; index >= rightIndex; index--){
+            if(nums[leftIndex] < nums[index]) break;
+        }
+
+        //直接交换leftIndex, index
+        swap(nums, leftIndex, index);
+        //nums[rightIndex,end]是降序 需要改成为升序
+        reverse(nums, rightIndex, length-1);
+    }
+
+    /**
+     * 数组反转  
+     */
+    public void reverse(int[] nums, int leftIndex, int rightIndex){
+        //双指针升序
+        while(leftIndex < rightIndex){
+            swap(nums, leftIndex, rightIndex);
+            leftIndex++; 
+            rightIndex--;
+        }
+    }
+    /**
+     *  两数交换
+     */
+    public void swap(int[] nums, int i, int j){
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+    
+}
 ```
 
 ##### 15.最长有效括号

@@ -1090,3 +1090,50 @@ class Solution {
     }
 }
 ```
+
+###### 17.组合总和
+```
+给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target ，找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合 ，并以列表形式返回。你可以按 任意顺序 返回这些组合。
+candidates 中的 同一个 数字可以 无限制重复被选取 。如果至少一个数字的被选数量不同，则两种组合是不同的。 
+对于给定的输入，保证和为 target 的不同组合数少于 150 个。
+
+解题思路：
+    试图尝试各种组合的解题思路，我认为是回溯，本题的回溯有个问题，就是元素可以重复选取
+    第一想法就是需要每个元素重复尝试到大于target，然后再和其他元素相加，直到排除该元素
+    不符合就往后移动
+```
+```java
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // 试图尝试各种组合的解题思路，我认为是回溯，本题的回溯有个问题，就是元素可以重复选取
+        // 第一想法就是需要每个元素重复尝试到大于target，然后再和其他元素相加，直到排除该元素
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> combination = new ArrayList<Integer>();
+        backtrack(candidates, target, result, combination, 0);
+        return result;
+    }
+
+    public void backtrack(int[] candidates, int target, List<List<Integer>> result, List<Integer> combination, int index) {
+        // 回溯终止条件，走到黑的index
+        if (index == candidates.length) {
+            return;
+        }
+
+        // 符合条件的组合，添加进列表
+        if (target == 0) {
+            result.add(new ArrayList<>(combination));
+            return;
+        }
+        
+        // 直接跳过
+        backtrack(candidates, target, result, combination, index + 1);
+        // 选择当前数
+        if (target - candidates[index] >= 0) {
+            combination.add(candidates[index]);
+            backtrack(candidates, target - candidates[index], result, combination, index);
+            // 回溯路径终止返回后(成功或者不成功)，需要去除不能成功的路径
+            combination.remove(combination.size() - 1);
+        }
+    }
+}
+```

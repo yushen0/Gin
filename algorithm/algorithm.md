@@ -17,6 +17,8 @@
 - [16.搜索旋转排序数组](#16搜索旋转排序数组)
 - [17.在排序数组中查找元素的第一个和最后一个位置](#17在排序数组中查找元素的第一个和最后一个位置)
 - [18.组合总和](#18组合总和)
+- [19.接雨水](#19接雨水)
+- [20.全排列](#20全排列)
 
 
 ##### 1.两数之和
@@ -1139,3 +1141,112 @@ class Solution {
     }
 }
 ```
+
+##### 19.接雨水
+```
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+解题思路：
+    1.动态规划，时间复杂度 O(n),空间复杂度O(n)
+    2.双指针，时间复杂度 O(n),空间复杂度O(1)
+```
+```java
+class Solution {
+    // 动态规划
+    public int trap(int[] height) {
+        int result = 0;
+        // 存放历史值(动态规划)
+        int[] maxLeft = new int[height.length];
+        int[] maxRight = new int[height.length];
+    
+        // 寻找左边每个索引对应的较大值
+        for (int i = 1; i < height.length - 1; i++) {
+            maxLeft[i] = Math.max(maxLeft[i - 1], height[i - 1]);
+        }
+        // 寻找右边每个索引对应的较大值
+        for (int i = height.length - 2; i >= 0; i--) {
+            maxRight[i] = Math.max(maxRight[i + 1], height[i + 1]);
+        }
+
+        for (int i = 1; i < height.length - 1; i++) {
+            // 每个索引对应的左右最大值比较较小的那个(简单Dp)
+            int min = Math.min(maxLeft[i], maxRight[i]);
+            if (min > height[i]) {
+                result += + (min - height[i]);
+            }
+        }
+        return result;
+    }
+}
+```
+```java
+// 双指针
+class Solution {
+    public int trap(int[] height) {
+        int result = 0;
+        // 左右指针
+        int left = 0; 
+        int right = height.length - 1;
+        // 左右最大值
+        int leftMax = 0;
+        int rightMax = 0;
+        while (left < right) {
+            // 分别确定左右两边的最大值
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if (height[left] < height[right]) {
+                // 左边的最大值-左侧当前值 == 可以接到的雨水
+                result += leftMax - height[left];
+                left++;
+            } else {
+                // 右侧的最大值 - 右侧当前值 == 可以接到的雨水
+                result += rightMax - height[right];
+                right--;
+            }
+        }
+        return result;
+    }
+}
+```
+
+##### 20.全排列
+```
+给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+
+解题思路：
+    回溯法
+    需要尝试各种组合，枚举，所以第一反应就是回溯
+    回溯需要注意结束条件和当前路径走不通的时候，需要将上一个路径移除
+    时间复杂度：不会算
+```
+```java
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        // 枚举 == 回溯
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> combination = new ArrayList<>();
+        backtrack(nums, result, combination, 0);
+        return result;
+    }
+
+    public void backtrack(int[] nums, List<List<Integer>> result, List<Integer> combination, int index) {
+        // 回溯结束条件
+        if (combination.size() == nums.length) {
+            // java中是值传递，这里需要进行一次拷贝操作，否则结果是空集合
+            result.add(new ArrayList<>(combination));
+            return;
+        }
+
+        for (int i = 0; i<nums.length; i++) {
+            // 因为数组不包含重复数字，所以需要进行一次判断，当前值有没有放进去了
+            if (!combination.contains(nums[i])){
+                combination.add(nums[i]);
+                backtrack(nums, result, combination, i+1);
+                combination.remove(combination.size() -1);
+            }
+            
+        }
+    }
+}
+```
+

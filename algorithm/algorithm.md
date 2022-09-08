@@ -19,6 +19,8 @@
 - [18.组合总和](#18组合总和)
 - [19.接雨水](#19接雨水)
 - [20.全排列](#20全排列)
+- [21.旋转图像](#21旋转图像)
+- [22.字母异位词分组](#22字母异位词分组)
 
 
 ##### 1.两数之和
@@ -1248,5 +1250,80 @@ class Solution {
         }
     }
 }
+```
+##### 21.旋转图像
+```
+给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。
+你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 使用另一个矩阵来旋转图像。
+
+解题思路：
+        原地反转，不能借助数组辅助
+        循环交换对应位置的元素，交换两次，时间复杂度 O(n^2)
+
+```
+
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        int length = matrix.length;
+        // 上下交换
+        for (int i = 0; i < length / 2; i++) {
+            for (int j = 0; j < length; j++) {
+                // 交换
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[length - i - 1][j];
+                matrix[length - i - 1][j] = temp;
+            }
+        }
+        // 交换对角线
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < i; j++) {
+                // swap
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+    }
+}
+```
+
+##### 22.字母异位词分组
+
+```
+给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
+字母异位词 是由重新排列源单词的字母得到的一个新单词，所有源单词中的字母通常恰好只用一次。
+
+解题思路：
+
+```
+
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        for (String str : strs) {
+            int[] counts = new int[26];
+            int length = str.length();
+            for (int i = 0; i < length; i++) {
+                counts[str.charAt(i) - 'a']++;
+            }
+            // 将每个出现次数大于 0 的字母和出现次数按顺序拼接成字符串，作为哈希表的键
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < 26; i++) {
+                if (counts[i] != 0) {
+                    sb.append((char) ('a' + i));
+                    sb.append(counts[i]);
+                }
+            }
+            String key = sb.toString();
+            List<String> list = map.getOrDefault(key, new ArrayList<String>());
+            list.add(str);
+            map.put(key, list);
+        }
+        return new ArrayList<List<String>>(map.values());
+    }
+}
+
 ```
 

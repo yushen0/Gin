@@ -1357,3 +1357,39 @@ class Solution {
 
 ```
 
+##### 23.最大子数组和
+```
+给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+子数组 是数组中的一个连续部分。
+
+解题思路：
+    动态规划
+    动态规划解题的要点是需要找到初始值、子问题、动态规划的状态转移方程
+    此题的初始值就是 nums[0] 也就是第一个值
+    子问题是：连续子数组的最大值
+    状态转移方程：
+                if (dp[i-1] > 0) : dp[i] = dp[i-1] + nums[i]
+                if (dp[i-1] <= 0) : nums[i]
+
+    时间复杂度： O(n)
+```
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        // 动态规划 初始值
+        int result = nums[0];
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            // 状态转移方程
+            if (sum > 0) {
+                sum += nums[i];
+            } else {
+                sum = nums[i];
+            }
+            // 子问题
+            result = Math.max(result, sum);
+        }
+        return result;
+    }
+}
+```

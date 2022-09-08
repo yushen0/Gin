@@ -1295,33 +1295,63 @@ class Solution {
 字母异位词 是由重新排列源单词的字母得到的一个新单词，所有源单词中的字母通常恰好只用一次。
 
 解题思路：
-
+        题目表示：将给出的数组中出现的  字母相同，字母顺序不同 的字符串，放到一个列表中
+        排序：字母异位词，说明字符串中出现的字母肯定一样，排序后肯定是一模一样的字符串
+             时间复杂度O(nklogk)  logk 是因为用到了排序，每次排序的时间复杂度是 logk
+        根据ascii值计数：字母异位词，说明字符串中出现的字母肯定一样，所以这个字符串中的ascii值出现的次数是一样的
+             时间复杂度O(nk)
+```
+```java
+// 排序
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> result = new HashMap<>();
+        // 字母异位词，说明字符串中出现的字母肯定一样，排序后肯定是一模一样的字符串
+        for (String str : strs) {
+            char[] chArr = str.toCharArray();
+            Arrays.sort(chArr);
+            String key = new String(chArr);
+            // 竟然不支持
+            //List<String> list = Optional.ofNullable(key).orElse(new ArrayList());
+            List<String> list = result.getOrDefault(key, new ArrayList());
+            list.add(str);
+            result.put(key, list);
+        }
+        return new ArrayList<>(result.values());
+    }
+}
 ```
 
 ```java
+// 根据ascii值计数
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        Map<String, List<String>> result = new HashMap<>();
+        // 字母异位词，说明字符串中出现的字母肯定一样，所以这个字符串中的ascii值的和是一样的
         for (String str : strs) {
-            int[] counts = new int[26];
-            int length = str.length();
-            for (int i = 0; i < length; i++) {
-                counts[str.charAt(i) - 'a']++;
+            char[] chArr = str.toCharArray();
+            // 计算字符出现的次数
+            int[] countArr = new int[26];
+            for (char ch : chArr) {
+                // 字符 - 'a' 代表索引
+                countArr[ch-'a']++;
             }
-            // 将每个出现次数大于 0 的字母和出现次数按顺序拼接成字符串，作为哈希表的键
-            StringBuffer sb = new StringBuffer();
+
+            StringBuilder strBuilder = new StringBuilder();
             for (int i = 0; i < 26; i++) {
-                if (counts[i] != 0) {
-                    sb.append((char) ('a' + i));
-                    sb.append(counts[i]);
+                if (countArr[i] != 0) {
+                    // 字符 + 字符出现的次数
+                    strBuilder.append((char) (i + 'a')).append(countArr[i]);
                 }
             }
-            String key = sb.toString();
-            List<String> list = map.getOrDefault(key, new ArrayList<String>());
+            String key = strBuilder.toString();
+            // 这儿不支持 Optional
+            //List<String> list = Optional.ofNullable(key).orElse(new ArrayList());
+            List<String> list = result.getOrDefault(key, new ArrayList());
             list.add(str);
-            map.put(key, list);
+            result.put(key, list);
         }
-        return new ArrayList<List<String>>(map.values());
+        return new ArrayList<>(result.values());
     }
 }
 
